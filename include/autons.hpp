@@ -1,5 +1,6 @@
 #pragma once
-
+void right_auton();
+void left_auton();
 void default_constants();
 
 void drive_example();

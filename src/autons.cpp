@@ -13,6 +13,114 @@ const int SWING_SPEED = 110;
 ///
 // Constants
 ///
+void low_goal_auto() { 
+  basket();
+  //chassis.pid_odom_set({{0_in, 4_in}, fwd, 110}, true);
+  //chassis.pid_wait();
+  //chassis.pid_turn_set(46_deg, 70);
+  //chassis.pid_wait();
+  //chassis.pid_odom_set({{17_in, 28_in}, fwd, 30}, true);
+  // chassis.pid_wait();
+  // pros::delay(1000);
+  // chassis.pid_odom_set({{8.5_in, 33.5_in, -43_deg}, fwd, 70}, true);
+  chassis.pid_odom_set({{{0_in, 4_in, 46_deg}, fwd, 120},
+                        {{17_in, 28_in}, fwd, 30},
+                        {{8.5_in, 33.5_in, -43_deg}, fwd, 70}},
+                       true);
+  chassis.pid_wait();
+  low_goal();
+  pros::delay(2000);
+  chassis.pid_odom_set({{{42.5_in, 10_in, 180_deg}, rev, 120},
+                        {{42.5_in, 8_in, 0_deg}, fwd, 120}},
+                      true);
+  // chassis.pid_odom_set({{42.5_in, 10_in}, rev, 110}, true);
+  // chassis.pid_wait(); 
+  // chassis.pid_turn_set(180_deg, 50);
+  // chassis.pid_wait();// Ensure the drive command completes before ending the function
+  scraper.set(true); // Deploy scraper
+  basket();
+  pros::delay(500);
+  chassis.pid_odom_set({{42.5_in, -14_in, 180_deg}, fwd, 127}, true);
+  chassis.pid_wait();
+  basket();
+  pros::delay(3000); 
+  chassis.pid_wait();
+  chassis.pid_odom_set({{42.5_in, 0_in, 180_deg}, rev, 110}, true);
+  chassis.pid_wait();
+  scraper.set(false); // Retract scraper
+  chassis.pid_turn_set(0_deg, 100);
+  chassis.pid_wait(); // Ensure the drive command completes before ending the function
+  // chassis.pid_odom_set({{42.5_in, 15_in, 180_deg}, fwd, 50}, true);
+  // chassis.pid_wait();
+}
+
+void middle_goal_auto() {
+  basket();
+  chassis.pid_odom_set({{0_in, 4_in}, fwd, 110}, true);
+  chassis.pid_wait();
+  chassis.pid_turn_set(-46_deg, 70);
+  chassis.pid_wait();
+  chassis.pid_odom_set({{-18_in, 29_in}, fwd, 30}, true);
+  chassis.pid_wait();
+  pros::delay(1000);
+  chassis.pid_odom_set({{-9_in, 33.5_in, 45_deg}, fwd, 70}, true);
+  chassis.pid_wait();
+  middle_goal();
+  pros::delay(2000);
+  chassis.pid_odom_set({{-42.5_in, 10_in}, rev, 110}, true);
+  chassis.pid_wait(); 
+  chassis.pid_turn_set(180_deg, 50);
+  chassis.pid_wait();// Ensure the drive command completes before ending the function
+  scraper.set(true); // Deploy scraper
+  basket();
+  pros::delay(500);
+chassis.pid_odom_set({{-42.5_in, -14_in, 180_deg}, fwd, 127}, true);
+  chassis.pid_wait();
+  basket();
+  pros::delay(3000); 
+  chassis.pid_wait();
+  chassis.pid_odom_set({{-42.5_in, 0_in, 180_deg}, rev, 110}, true);
+  chassis.pid_wait();
+  scraper.set(false); // Retract scraper
+  chassis.pid_turn_set(0_deg, 100);
+  chassis.pid_wait();
+}
+///
+// Drive Example
+///
+void drive_example() {
+  // The first parameter is target inches
+  // The second parameter is max speed the robot will drive at
+  // The third parameter is a boolean (true or false) for enabling/disabling a slew at the start of drive motions
+  // for slew, only enable it when the drive distance is greater than the slew distance + a few inches
+
+  chassis.pid_drive_set(24_in, DRIVE_SPEED, true);
+  chassis.pid_wait();
+
+  chassis.pid_drive_set(-12_in, DRIVE_SPEED);
+  chassis.pid_wait();
+
+  chassis.pid_drive_set(-12_in, DRIVE_SPEED);
+  chassis.pid_wait();
+}
+
+///
+// Turn Example
+///
+void turn_example() {
+  // The first parameter is the target in degrees
+  // The second parameter is max speed the robot will drive at
+
+  chassis.pid_turn_set(90_deg, TURN_SPEED);
+  chassis.pid_wait();
+
+  chassis.pid_turn_set(45_deg, TURN_SPEED);
+  chassis.pid_wait();
+
+  chassis.pid_turn_set(0_deg, TURN_SPEED);
+  chassis.pid_wait();
+}
+
 void default_constants() {
   // P, I, D, and Start I
   chassis.pid_drive_constants_set(20.0, 0.0, 100.0);         // Fwd/rev constants, used for odom and non odom motions

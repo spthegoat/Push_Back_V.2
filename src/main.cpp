@@ -8,12 +8,12 @@
 // Chassis constructor
 ez::Drive chassis(
     // These are your drive motors, the first motor is used for sensing!
-    {1, 2, 3},     // Left Chassis Ports (negative port will reverse it!)
-    {-4, -5, -6},  // Right Chassis Ports (negative port will reverse it!)
+    {-13, 14, -15},     // Left Chassis Ports (negative port will reverse it!)
+    {18, -17, 16},  // Right Chassis Ports (negative port will reverse it!)
 
-    7,      // IMU Port
-    4.125,  // Wheel Diameter (Remember, 4" wheels without screw holes are actually 4.125!)
-    343);   // Wheel RPM = cartridge * (motor gear / wheel gear)
+    10,      // IMU Port
+    2.75,  // Wheel Diameter (Remember, 4" wheels without screw holes are actually 4.125!)
+    600);   // Wheel RPM = cartridge * (motor gear / wheel gear)
 
 // Uncomment the trackers you're using here!
 // - `8` and `9` are smart ports (making these negative will reverse the sensor)
@@ -21,7 +21,7 @@ ez::Drive chassis(
 // - `2.75` is the wheel diameter
 // - `4.0` is the distance from the center of the wheel to the center of the robot
 // ez::tracking_wheel horiz_tracker(8, 2.75, 4.0);  // This tracking wheel is perpendicular to the drive wheels
-// ez::tracking_wheel vert_tracker(9, 2.75, 4.0);   // This tracking wheel is parallel to the drive wheels
+ez::tracking_wheel vert_tracker(4, 2, 0);   // This tracking wheel is parallel to the drive wheels
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -46,7 +46,7 @@ void initialize() {
 
   // Configure your chassis controls
   chassis.opcontrol_curve_buttons_toggle(true);   // Enables modifying the controller curve with buttons on the joysticks
-  chassis.opcontrol_drive_activebrake_set(0.0);   // Sets the active brake kP. We recommend ~2.  0 will disable.
+  chassis.opcontrol_drive_activebrake_set(2.0);   // Sets the active brake kP. We recommend ~2.  0 will disable.
   chassis.opcontrol_curve_default_set(0.0, 0.0);  // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)
 
   // Set the drive to your own constants from autons.cpp!
@@ -58,6 +58,8 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
+      {"Right Auto", right_auton},
+      {"Left Auto", left_auton},
       {"Drive\n\nDrive forward and come back", drive_example},
       {"Turn\n\nTurn 3 times.", turn_example},
       {"Drive and Turn\n\nDrive forward, turn, come back", drive_and_turn},
@@ -247,8 +249,8 @@ void opcontrol() {
     // Gives you some extras to make EZ-Template ezier
     ez_template_extras();
 
-    chassis.opcontrol_tank();  // Tank control
-    // chassis.opcontrol_arcade_standard(ez::SPLIT);   // Standard split arcade
+    // chassis.opcontrol_tank();  // Tank control
+    chassis.opcontrol_arcade_standard(ez::SPLIT);   // Standard split arcade
     // chassis.opcontrol_arcade_standard(ez::SINGLE);  // Standard single arcade
     // chassis.opcontrol_arcade_flipped(ez::SPLIT);    // Flipped split arcade
     // chassis.opcontrol_arcade_flipped(ez::SINGLE);   // Flipped single arcade
@@ -256,7 +258,93 @@ void opcontrol() {
     // . . .
     // Put more user control code here!
     // . . .
-
+  if (master.get_digital(DIGITAL_L1)) {
+    // middle goal
+    piston1.set(false); 
+    front_intake.move(115);
+    back_intake.move(115);
+    top_intake.move(-115);
+  } else if (master.get_digital(DIGITAL_L2)) {
+    // outtake
+    piston1.set(false);
+    front_intake.move(-80);
+    back_intake.move(80);
+    top_intake.move(0);
+ // Retract piston for outtake
+  } else if (master.get_digital(DIGITAL_R1)) {
+       // High goal
+    piston1.set(true);
+    front_intake.move(127);
+    back_intake.move(127);
+    top_intake.move(127);
+ // Extend piston for high goal
+  } else if (master.get_digital(DIGITAL_RIGHT)) {
+    // Auto 180 turn
+    chassis.pid_turn_set(180_deg, 110); // Turns the robot 180 degrees
+    pros::delay(500); // Optional: short delay to prevent repeated turns if button is held
+    } else if (master.get_digital(DIGITAL_R2)) {
+    // Basket
+    piston1.set(false);
+    front_intake.move(127);
+    back_intake.move(0);
+    top_intake.move(127);
+ // Retract piston 
+    } else if (master.get_digital(DIGITAL_DOWN)) {
+    // High goal
+    piston1.set(false); 
+    front_intake.move(127);
+    back_intake.move(-127);
+    top_intake.move(-127);
+    } else {
+    // Stop intake
+    piston1.set(false);
+    front_intake.move(0);
+    back_intake.move(0);
+    top_intake.move(0);
+   // Retract piston when stopped
+  }
+ // Toggle scraper with A button
+  static bool scraperState=false;
+  if (master.get_digital_new_press(DIGITAL_A)) {
+  scraperState = !scraperState;
+  scraper.set(scraperState);
     pros::delay(ez::util::DELAY_TIME);  // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }
+  pros::delay(ez::util::DELAY_TIME);  // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
+}} // <-- Add this closing brace to end opcontrol()
+
+void middle_goal() {
+  piston1.set(false);
+  front_intake.move(100);
+  back_intake.move(100);
+  top_intake.move(-100);
+}
+
+void low_goal() {
+ piston1.set(false);
+ front_intake.move(-70);
+ back_intake.move(70);
+ top_intake.move(0);
+}
+
+void high_goal() {
+  piston1.set(true);
+  front_intake.move(127);
+  back_intake.move(0);
+  top_intake.move(127);  
+}
+
+void basket() {
+  piston1.set(false);
+  front_intake.move(127);
+  back_intake.move(0);
+  top_intake.move(127);
+}
+
+void stop() {
+  piston1.set(false);
+  front_intake.move(0);
+  back_intake.move(0);
+  top_intake.move(0);
+ // Retract piston when stopped
 }
