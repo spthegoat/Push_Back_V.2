@@ -1,4 +1,6 @@
 #include "main.h"
+#include "subsystems.hpp"
+#include "main.cpp"
 
 /////
 // For installation, upgrading, documentations, and tutorials, check out our website!
