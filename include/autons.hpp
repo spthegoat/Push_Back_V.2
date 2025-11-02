@@ -1,8 +1,8 @@
 #pragma once
-void right_auton();
-void left_auton();
-void default_constants();
 
+void low_goal_auto();
+void middle_goal_auto();
+void default_constants();
 void drive_example();
 void turn_example();
 void drive_and_turn();

@@ -58,8 +58,8 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
-      {"Right Auto", right_auton},
-      {"Left Auto", left_auton},
+      {"Right Auto", low_goal_auto},
+      {"Left Auto", middle_goal_auto},
       {"Drive\n\nDrive forward and come back", drive_example},
       {"Turn\n\nTurn 3 times.", turn_example},
       {"Drive and Turn\n\nDrive forward, turn, come back", drive_and_turn},
@@ -310,41 +310,4 @@ void opcontrol() {
   scraper.set(scraperState);
     pros::delay(ez::util::DELAY_TIME);  // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }
-  pros::delay(ez::util::DELAY_TIME);  // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
 }} // <-- Add this closing brace to end opcontrol()
-
-void middle_goal() {
-  piston1.set(false);
-  front_intake.move(100);
-  back_intake.move(100);
-  top_intake.move(-100);
-}
-
-void low_goal() {
- piston1.set(false);
- front_intake.move(-70);
- back_intake.move(70);
- top_intake.move(0);
-}
-
-void high_goal() {
-  piston1.set(true);
-  front_intake.move(127);
-  back_intake.move(0);
-  top_intake.move(127);  
-}
-
-void basket() {
-  piston1.set(false);
-  front_intake.move(127);
-  back_intake.move(0);
-  top_intake.move(127);
-}
-
-void stop() {
-  piston1.set(false);
-  front_intake.move(0);
-  back_intake.move(0);
-  top_intake.move(0);
- // Retract piston when stopped
-}
