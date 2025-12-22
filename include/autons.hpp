@@ -1,5 +1,5 @@
 #pragma once
-
+//k
 void low_goal_auto();
 void middle_goal_auto();
 void default_constants();
