@@ -59,6 +59,7 @@ void initialize() {
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
       {"Autonomous\n\nSkills", skills},
+      {"Solo AWP", solo_awp},
       {"Right Auto", low_goal_auto},
       {"Left Auto", middle_goal_auto},
       {"Drive\n\nDrive forward and come back", drive_example},

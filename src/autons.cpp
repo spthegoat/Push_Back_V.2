@@ -101,101 +101,142 @@ void default_constants() {
 
   chassis.pid_angle_behavior_set(ez::shortest);  // Changes the default behavior for turning, this defaults it to the shortest path there
 } 
-
+void solo_awp() {
+  chassis.drive_brake_set(pros::E_MOTOR_BRAKE_HOLD);
+  basket();
+  chassis.pid_odom_set({{0_in, 8_in}, fwd, 120}, true);
+  chassis.pid_wait();
+  scraper.set(true);
+  chassis.pid_odom_set({{7_in, -49_in, -90_deg}, rev, 110}, true);
+  chassis.pid_wait();
+  chassis.pid_odom_set({{-10_in, -49_in}, fwd, 70}, true);
+  chassis.pid_wait();
+  chassis.drive_brake_set(pros::E_MOTOR_BRAKE_HOLD);
+  basket();
+  pros::delay(650);
+  stop();
+  chassis.pid_odom_set({{25_in, -49_in}, rev, 110}, true); 
+  chassis.pid_wait();
+  high_goal();
+  pros::delay(2000);
+  scraper.set(false);
+  chassis.pid_odom_set({{10_in, -49_in, 55_deg}, fwd, 110}, true);
+  chassis.pid_wait();
+  chassis.pid_odom_set({{40_in, -10_in}, fwd, 60}, true);
+  chassis.pid_wait();
+}
 void skills() {
   chassis.drive_brake_set(pros::E_MOTOR_BRAKE_HOLD);
   basket();
+  scraper.set(true);
   chassis.pid_odom_set({{0_in, 34.25_in, 90_deg}, fwd, 110}, true);
   chassis.pid_wait();
-  scraper.set(true);
-  chassis.pid_odom_set({{-17_in, 34.25_in}, rev, 110}, true);
-  chassis.pid_wait();
-  chassis.pid_odom_set({{16_in, 34_in}, fwd, 60}, true);
+  /* chassis.pid_odom_set({{-18_in, 34.25_in}, rev, 110}, true);
+  chassis.pid_wait(); */
+  chassis.pid_odom_set({{18_in, 34.45_in}, fwd, 70}, true);
   chassis.pid_wait();
   chassis.drive_brake_set(pros::E_MOTOR_BRAKE_HOLD);
   basket();
-  pros::delay(3500);
+  pros::delay(3250);
   chassis.pid_odom_set({{1_in, 34.25_in}, rev, 110}, true);
   chassis.pid_wait();
   scraper.set(false);
   chassis.pid_odom_set({{3_in, 48.5_in}, fwd, 110}, true);
   chassis.pid_wait();
-  chassis.pid_turn_set(-90_deg, 70);
+  chassis.pid_turn_set(-90_deg, 120);
   chassis.pid_wait();
   chassis.pid_odom_set({{-103_in, 48.5_in}, fwd, 120}, true);
   chassis.pid_wait();
-  chassis.pid_turn_set(180_deg, 70);
+  chassis.pid_turn_set(180_deg, 120);
   chassis.pid_wait();
-  chassis.pid_odom_set({{-103_in, 34_in}, fwd, 120}, true);
+  chassis.pid_odom_set({{-103_in, 35_in}, fwd, 120}, true);
   chassis.pid_wait();
-  chassis.pid_turn_set(-90_deg, 70);
-  chassis.pid_wait();
-  chassis.pid_odom_set({{-85_in, 34_in}, rev, 120}, true);
+  chassis.pid_turn_set(-90_deg, 120);
+  chassis.pid_wait(); 
+  chassis.pid_odom_set({{-85_in, 35_in}, rev, 120}, true);
   chassis.pid_wait();
   stop();
-  chassis.pid_odom_set({{-72_in, 34_in}, rev, 120}, true);
+  chassis.pid_odom_set({{-76_in, 35_in}, rev, 120}, true);
   chassis.pid_wait();
   chassis.drive_brake_set(pros::E_MOTOR_BRAKE_HOLD); 
-  high_goal();
+  high_goal(); // first scoring on the right goal
   scraper.set(true);
-  pros::delay(3500);
-  chassis.pid_odom_set({{-115_in, 33.75_in}, fwd, 60}, true);
+  pros::delay(2000);
+  chassis.pid_odom_set({{-115_in, 35_in}, fwd, 70}, true);
   chassis.pid_wait();
   chassis.drive_brake_set(pros::E_MOTOR_BRAKE_HOLD);
-  basket();
-  pros::delay(3000);
-  chassis.pid_odom_set({{-95_in, 34_in}, rev, 120}, true);
-  chassis.pid_wait();
+  basket(); // unloads 2nd loader
+  pros::delay(3250);
   stop();
-  chassis.pid_odom_set({{-72_in, 34_in}, rev, 120}, true);
+  /* chassis.pid_odom_set({{-95_in, 35_in}, rev, 120}, true);
+  chassis.pid_wait(); */ // first stop
+  chassis.pid_odom_set({{-74_in, 35_in}, rev, 120}, true);
   chassis.pid_wait();
   chassis.drive_brake_set(pros::E_MOTOR_BRAKE_HOLD);
-  high_goal();
-  pros::delay(3500);
-  chassis.pid_odom_set({{-85_in, 34_in}, fwd, 60}, true);  
+  high_goal(); // second scoring on the right goal
+  pros::delay(2000);
+  chassis.pid_odom_set({{-85_in, 35_in}, fwd, 60}, true);  
   chassis.pid_wait();
-  chassis.pid_turn_set(180_deg, 100);
+  chassis.pid_turn_set(180_deg, 120);
   chassis.pid_wait(); // Ensure the drive command completes before ending the function
-  chassis.pid_odom_set({{-85_in, -76_in}, fwd, 120}, true);
+  chassis.pid_odom_set({{-85_in, -75.2_in}, fwd, 120}, true); // goes to the other side of the field
   chassis.pid_wait();
-  chassis.pid_turn_set(-90_deg, 100);
-  chassis.pid_wait(); // Ensure the drive command completes before ending the function
-  basket();
-  chassis.pid_odom_set({{-65_in, -76.2_in}, rev, 120}, true);
-  chassis.pid_wait();
-  chassis.pid_odom_set({{-115_in, -76.2_in}, fwd, 120}, true);
-  chassis.pid_wait();
-  chassis.drive_brake_set(pros::E_MOTOR_BRAKE_HOLD);
-  basket();
-  pros::delay(3000);
-  chassis.pid_odom_set({{-81_in, -76.2_in}, rev, 120}, true);
-  chassis.pid_wait();
-  chassis.pid_turn_set(180_deg, 100);
-  chassis.pid_wait(); // Ensure the drive command completes before ending the function
-  chassis.pid_odom_set({{-81_in, -90_in}, fwd, 120}, true);
+  chassis.pid_turn_set(-90_deg, 120);
   chassis.pid_wait(); 
-  chassis.pid_turn_set(90_deg, 100);
+  basket();
+  /* chassis.pid_odom_set({{-65_in, -75.2_in}, rev, 120}, true);
+  chassis.pid_wait(); */
+  chassis.pid_odom_set({{-110_in, -75.2_in}, fwd, 70}, true);
+  chassis.pid_wait();
+  chassis.drive_brake_set(pros::E_MOTOR_BRAKE_HOLD);
+  basket(); // unloads 3rd loader
+  pros::delay(3250);
+  chassis.pid_odom_set({{-98_in, -75.2_in}, rev, 120}, true);
+  chassis.pid_wait();
   scraper.set(false);
+  chassis.pid_turn_set(180_deg, 120);
+  chassis.pid_wait(); // Ensure the drive command completes before ending the function
+  chassis.pid_odom_set({{-98_in, -90_in}, fwd, 120}, true);
+  chassis.pid_wait(); 
+  chassis.pid_turn_set(90_deg, 120);
   chassis.pid_wait(); // Ensure the drive command completes before ending the function
   chassis.pid_odom_set({{8_in, -90_in}, fwd, 120}, true);
   chassis.pid_wait();
-  chassis.pid_turn_set(0_deg, 100);
+  chassis.pid_turn_set(0_deg, 120);
   chassis.pid_wait(); // Ensure the drive command completes before ending the function
-  chassis.pid_odom_set({{8_in, -76.2_in}, fwd, 120}, true);
+  chassis.pid_odom_set({{8_in, -75.2_in}, fwd, 120}, true);
   chassis.pid_wait();
-  chassis.pid_turn_set(90_deg, 100);
+  chassis.pid_turn_set(90_deg, 120);
   chassis.pid_wait();
-  chassis.pid_odom_set({{-17_in, -76.2_in}, rev, 120}, true);
+  chassis.pid_odom_set({{0_in, -75.2_in}, rev, 120}, true);
+  chassis.pid_wait();
+  stop();
+  chassis.pid_odom_set({{-17_in, -75.2_in}, rev, 120}, true);
   chassis.pid_wait();
   chassis.drive_brake_set(pros::E_MOTOR_BRAKE_HOLD);
   high_goal();
-  pros::delay(3000);
+  scraper.set(true);
+  pros::delay(2000);
   basket();
-  chassis.pid_odom_set({{16_in, -76.2_in}, fwd, 60}, true);
+  chassis.pid_odom_set({{22_in, -75.2_in}, fwd, 70}, true);
   chassis.pid_wait();
   chassis.drive_brake_set(pros::E_MOTOR_BRAKE_HOLD);
   basket();
-  pros::delay(3500);
+  pros::delay(3250);
+  stop();
+  /* chassis.pid_odom_set({{0_in, -75.2_in}, rev, 110}, true);
+  chassis.pid_wait(); */ // secnond stop
+  chassis.pid_odom_set({{-17_in, -75_in}, rev, 120}, true);
+  chassis.pid_wait();
+  chassis.drive_brake_set(pros::E_MOTOR_BRAKE_HOLD);
+  high_goal();
+  pros::delay(2000);
+  scraper.set(false);
+  basket();
+  chassis.pid_odom_set({{23.5_in, -42_in, 0_deg}, fwd, 60}, true);
+  chassis.pid_wait(); 
+  chassis.pid_odom_set({{23.5_in, -11_in}, fwd, 127}, true);
+  chassis.pid_wait();
 }
 
  /* chassis.pid_odom_set({{10_in,  47_in}, rev, 110}, true);

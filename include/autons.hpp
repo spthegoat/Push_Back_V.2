@@ -1,5 +1,6 @@
 #pragma once
 //k
+void solo_awp();
 void skills();
 void low_goal_auto();
 void middle_goal_auto();
