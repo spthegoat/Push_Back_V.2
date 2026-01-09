@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "SKills",
+    "project_name": "Low Goal",
     "target": "v5",
     "templates": {
       "EZ-Template": {
@@ -424,8 +424,9 @@
       }
     },
     "upload_options": {
-      "description": "roboticsisez.com",
-      "slot": 1
+      "description": "11981D",
+      "slot": 7,
+      "icon": "X"
     },
     "use_early_access": false
   }

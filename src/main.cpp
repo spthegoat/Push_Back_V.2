@@ -58,24 +58,15 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
-      {"Autonomous\n\nSkills", skills},
+      {"low goal\n\nDrive forward and score low goal", low_goal_1},
+      {"Right Long Goal 9\n\nLong goal on right side", right_long_goal_9},
       {"Solo AWP", solo_awp},
-      {"Right Auto", low_goal_auto},
-      {"Left Auto", middle_goal_auto},
-      {"Drive\n\nDrive forward and come back", drive_example},
-      {"Turn\n\nTurn 3 times.", turn_example},
-      {"Drive and Turn\n\nDrive forward, turn, come back", drive_and_turn},
-      {"Drive and Turn\n\nSlow down during drive", wait_until_change_speed},
-      {"Swing Turn\n\nSwing in an 'S' curve", swing_example},
-      {"Motion Chaining\n\nDrive forward, turn, and come back, but blend everything together :D", motion_chaining},
-      {"Combine all 3 movements", combining_movements},
-      {"Interference\n\nAfter driving forward, robot performs differently if interfered or not", interfered_example},
-      {"Simple Odom\n\nThis is the same as the drive example, but it uses odom instead!", odom_drive_example},
-      {"Pure Pursuit\n\nGo to (0, 30) and pass through (6, 10) on the way.  Come back to (0, 0)", odom_pure_pursuit_example},
-      {"Pure Pursuit Wait Until\n\nGo to (24, 24) but start running an intake once the robot passes (12, 24)", odom_pure_pursuit_wait_until_example},
-      {"Boomerang\n\nGo to (0, 24, 45) then come back to (0, 0, 0)", odom_boomerang_example},
-      {"Boomerang Pure Pursuit\n\nGo to (0, 24, 45) on the way to (24, 24) then come back to (0, 0, 0)", odom_boomerang_injected_pure_pursuit_example},
-      {"Measure Offsets\n\nThis will turn the robot a bunch of times and calculate your offsets for your tracking wheels.", measure_offsets},
+      {"Test\n\nDrive forward 3 feet", test},
+      {"Right Long Goal 7\n\nLong goal on right side", right_long_goal_7},
+      {"Left Long Goal 7\n\nLong goal on left side", left_long_goal_7},
+      {"Left Long Goal 9\n\nLong goal on left side", left_long_goal_9},
+      
+      {"Autonomous\n\nSkills", skills},
   });
 
   // Initialize chassis and auton selector
@@ -247,6 +238,10 @@ void opcontrol() {
   // This is preference to what you like to drive on
   chassis.drive_brake_set(MOTOR_BRAKE_HOLD);
 
+  // Declare persistent state at function scope (better practice)
+  static bool scraperState = false;
+  static bool bunnyState = false;
+
   while (true) {
     // Gives you some extras to make EZ-Template ezier
     ez_template_extras();
@@ -260,67 +255,63 @@ void opcontrol() {
     // . . .
     // Put more user control code here!
     // . . .
-  if (master.get_digital(DIGITAL_L1)) {
-    // middle goal
-    bunny.set(true); 
-    front_intake.move(120);
-    back_intake.move(120);
-    top_intake.move(120);
-  } else if (master.get_digital(DIGITAL_L2)) {
-    // outtake
-    bunny.set(true);
-    front_intake.move(80);
-    back_intake.move(-80);
-    top_intake.move(-80);
- // Retract piston for outtake
-  } else if (master.get_digital(DIGITAL_R1)) {
-       // High goal
-    bunny.set(false);
-    front_intake.move(-127);
-    back_intake.move(127);
-    top_intake.move(127);
- // Extend piston for high goal
-  } else if (master.get_digital(DIGITAL_RIGHT)) {
-    // Auto 180 turn
-    chassis.pid_turn_set(180_deg, 110); // Turns the robot 180 degrees
-    pros::delay(500); // Optional: short delay to prevent repeated turns if button is held
+    if (master.get_digital(DIGITAL_L1)) {
+      // middle goal
+      bunny.set(true); 
+      front_intake.move(120);
+      back_intake.move(120);
+      top_intake.move(120); 
+    } else if (master.get_digital(DIGITAL_L2)) {
+      // low goal
+      bunny.set(true);
+      front_intake.move(80);
+      back_intake.move(-80);
+      top_intake.move(-80);
+   // Retract piston for outtake
     } else if (master.get_digital(DIGITAL_R2)) {
-    // Basket
-    bunny.set(true);
-    front_intake.move(-127);
-    back_intake.move(127);
-    top_intake.move(127);
- // Retract piston 
-    } else if (master.get_digital(DIGITAL_DOWN)) {
-    // High goal
-    bunny.set(true); 
-    front_intake.move(127);
-    back_intake.move(-127);
-    top_intake.move(-127);
-    } else if (master.get_digital(DIGITAL_X)) {
-     bunny.set(true);
-     front_intake.move(0);
-     back_intake.move(0); 
-     top_intake.move(0);
-    } else {
-    // Stop intake
-    bunny.set(true);
-    front_intake.move(0);
-    back_intake.move(0);
-    top_intake.move(0);
-   // Retract piston when stopped
+         // basket
+      bunny.set(true);
+      front_intake.move(-127);
+      back_intake.move(127);
+      top_intake.move(127);
+   // Extend piston for high goal Optional: short delay to prevent repeated turns if button is held
+      } else if (master.get_digital(DIGITAL_R1)) {
+      // high goal
+      bunny.set(false);
+      front_intake.move(-127);
+      back_intake.move(127);
+      top_intake.move(127);
+   // Retract piston 
+      } else if (master.get_digital(DIGITAL_DOWN)) {
+      // High goal
+      bunny.set(true); 
+      front_intake.move(127);
+      back_intake.move(-127);
+      top_intake.move(-127);
+      } else if (master.get_digital(DIGITAL_X)) {
+       bunny.set(true);
+       front_intake.move(0);
+       back_intake.move(0); 
+       top_intake.move(0);
+      } else {
+      // Stop intake
+      bunny.set(bunnyState);  // Use toggled state instead of always true
+      front_intake.move(0);
+      back_intake.move(0);
+      top_intake.move(0);
+     // Retract piston when stopped
+    }
+   // Toggle scraper with A button
+    if (master.get_digital_new_press(DIGITAL_A)) {
+      scraperState = !scraperState;
+      scraper.set(scraperState);
+      pros::delay(ez::util::DELAY_TIME);  // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
+    }
+    
+    if (master.get_digital_new_press(DIGITAL_B)) {
+      bunnyState = !bunnyState;
+      bunny.set(bunnyState);
+      pros::delay(ez::util::DELAY_TIME);  // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
+    }
   }
- // Toggle scraper with A button
-  static bool scraperState=false;
-  if (master.get_digital_new_press(DIGITAL_A)) {
-  scraperState = !scraperState;
-  scraper.set(scraperState);
-    pros::delay(ez::util::DELAY_TIME);  // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
-  }
-  static bool bunnyState=false;
-  if (master.get_digital_new_press(DIGITAL_A)) {
-  bunnyState = !bunnyState;
-  bunny.set(bunnyState);
-    pros::delay(ez::util::DELAY_TIME);  // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
-  }
-}} // <-- Add this closing brace to end opcontrol()
+}

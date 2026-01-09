@@ -11,6 +11,6 @@ inline pros::Motor front_intake(21);
 inline pros::Motor back_intake(20);
 inline pros::Motor top_intake(12);
 
-inline ez::Piston bunny('A', true);
+inline ez::Piston bunny('A', false);
 inline ez::Piston scraper('B', false);
 // inline pros::adi::DigitalIn limit_switch('A');

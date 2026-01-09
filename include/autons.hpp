@@ -1,9 +1,16 @@
 #pragma once
 //k
+void middle_goal();
+void low_goal_1();
+void test();
+void base_7();
+void left_long_goal_7();
+void right_long_goal_7();
+void base_9();
+void left_long_goal_9();  
+void right_long_goal_9(); 
 void solo_awp();
 void skills();
-void low_goal_auto();
-void middle_goal_auto();
 void default_constants();
 void drive_example();
 void turn_example();
