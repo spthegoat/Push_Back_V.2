@@ -1,6 +1,6 @@
 #pragma once
 //k
-void middle_goal();
+void middle_goal_1();
 void low_goal_1();
 void test();
 void base_7();

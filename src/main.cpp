@@ -58,15 +58,16 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
-      {"low goal\n\nDrive forward and score low goal", low_goal_1},
-      {"Right Long Goal 9\n\nLong goal on right side", right_long_goal_9},
-      {"Solo AWP", solo_awp},
-      {"Test\n\nDrive forward 3 feet", test},
-      {"Right Long Goal 7\n\nLong goal on right side", right_long_goal_7},
-      {"Left Long Goal 7\n\nLong goal on left side", left_long_goal_7},
-      {"Left Long Goal 9\n\nLong goal on left side", left_long_goal_9},
+    {"Solo AWP", solo_awp},
+    {"middle goal\n\nDrive forward and score middle goal", middle_goal_1},
+    {"Left Long Goal 7\n\nLong goal on left side", left_long_goal_7},
+    {"Left Long Goal 9\n\nLong goal on left side", left_long_goal_9},
+    {"low goal\n\nDrive forward and score low goal", low_goal_1},
+    {"Right Long Goal 7\n\nLong goal on right side", right_long_goal_7},
+    {"Right Long Goal 9\n\nLong goal on right side", right_long_goal_9},
+    {"Autonomous\n\nSkills", skills},
+    {"Test\n\nDrive forward 3 feet", test},
       
-      {"Autonomous\n\nSkills", skills},
   });
 
   // Initialize chassis and auton selector
@@ -258,9 +259,9 @@ void opcontrol() {
     if (master.get_digital(DIGITAL_L1)) {
       // middle goal
       bunny.set(true); 
-      front_intake.move(120);
-      back_intake.move(120);
-      top_intake.move(120); 
+      front_intake.move(50);
+      back_intake.move(50);
+      top_intake.move(50); 
     } else if (master.get_digital(DIGITAL_L2)) {
       // low goal
       bunny.set(true);

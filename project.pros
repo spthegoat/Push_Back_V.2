@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "Low Goal",
+    "project_name": "Solo AWP",
     "target": "v5",
     "templates": {
       "EZ-Template": {
@@ -425,7 +425,7 @@
     },
     "upload_options": {
       "description": "11981D",
-      "slot": 7,
+      "slot": 2,
       "icon": "X"
     },
     "use_early_access": false
